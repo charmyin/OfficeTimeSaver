@@ -37,7 +37,9 @@ public class ExcelSupport {
 			Iterator<Row> rows = sheet.iterator();
 			rows.next();
 			rows.next();
+			int count=2;
 			while(rows.hasNext()){
+				count++;
 				Row row = rows.next();
 				Cell cel = row.getCell(0);
 				if(cel==null||cel.toString().trim().equals("")){
@@ -46,7 +48,12 @@ public class ExcelSupport {
 				Cell cel7 = row.getCell(7);
 				LeaveRequest lq = new LeaveRequest();
 				lq.setStaffName(cel.toString().replaceAll("\\s",""));
-				lq.setLeavePiece(cel7.toString().replaceAll("\\s",""));
+				try{
+					lq.setLeavePiece(cel7.toString().replaceAll("\\s",""));
+				}catch(Exception e){
+					System.out.println(count+"---"+row.getCell(0).toString()+":");
+					e.printStackTrace();
+				}
 				list.add(lq);
 				//System.out.println(cel.toString());
 			}

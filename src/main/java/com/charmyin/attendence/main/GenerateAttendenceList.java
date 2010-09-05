@@ -19,9 +19,9 @@ import com.charmyin.attendence.po.StaffAttendencePiece;
 public class GenerateAttendenceList {
 	//离职人员打卡数据
 	public static List<Attendence> atNotfoundList;
-	private static String saturday = "13";
+	private static String saturday = "31";
 	private static List<StaffAttendencePiece> sapList = new ArrayList<StaffAttendencePiece>();
-	private static String  attendenceFilePath= "F:\\zebone\\staffattendence\\7.8-7.13.txt";
+	private static String  attendenceFilePath= "F:\\zebone\\staffattendence\\8.26-8.31.txt";
 	
 	/**
 	 * @param args
@@ -88,7 +88,7 @@ public class GenerateAttendenceList {
 				
 				//在上班时间打卡的行为都不是好行为~
 				if(saturday.equals(str[2].split("-")[2])){
-					System.out.println("周六打卡情况："+str[1]+"~~"+str[2]+"~~"+str[3]);
+					//System.out.println("周六打卡情况："+str[1]+"~~"+str[2]+"~~"+str[3]);
 					if((hourOfDay>=8 && hourOfDay<11)){
 						if((hourOfDay==8&&minuteOfHour==0)){
 							atd.setWrong(false);

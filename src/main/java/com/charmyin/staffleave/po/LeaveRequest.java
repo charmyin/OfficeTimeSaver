@@ -44,7 +44,7 @@ public class LeaveRequest {
 	public void setLeavePiece(List leavePiece) {
 		this.leavePiece = leavePiece;
 	}
-	public void setLeavePiece(String string) {
+	public void setLeavePiece(String string) throws Exception {
 		this.leavePieceString = string;
 		String[] leavePieces = string.split("\\+");
 		this.leavePiece = new ArrayList<LeavePiece>();

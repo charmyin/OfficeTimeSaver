@@ -1,6 +1,5 @@
 package com.charmyin.staffleave.po;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,7 +52,7 @@ public class LeavePiece {
 			leaveDayCount-=0.0f;
 		}else{
 			leaveDayCount = 0.0f ;
-			throw(new Exception("!"));
+			throw(new Exception("日期格式有误!"));
 		}
 		
 		//System.out.println(leaveDayCount);
@@ -61,7 +60,7 @@ public class LeavePiece {
 		
 	}
 	
-	public LeavePiece(String str) {
+	public LeavePiece(String str) throws Exception{
 		String[] strlps = str.split("=");
 		String start = strlps[1].split("-")[0];
 		String end = strlps[1].split("-")[1];
@@ -73,6 +72,7 @@ public class LeavePiece {
 			setLeaveDayCount();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception("时间格式有错误");
 		}
 	}
 	public String getLeaveType() {
