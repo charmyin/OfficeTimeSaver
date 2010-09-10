@@ -19,9 +19,9 @@ import com.charmyin.attendence.po.StaffAttendencePiece;
 public class GenerateAttendenceList {
 	//离职人员打卡数据
 	public static List<Attendence> atNotfoundList;
-	private static String saturday = "31";
+	private static String saturday = "7";
 	private static List<StaffAttendencePiece> sapList = new ArrayList<StaffAttendencePiece>();
-	private static String  attendenceFilePath= "F:\\zebone\\staffattendence\\8.26-8.31.txt";
+	private static String  attendenceFilePath= "F:\\zebone\\staffattendence\\9.2-9.7.txt";
 	
 	/**
 	 * @param args
