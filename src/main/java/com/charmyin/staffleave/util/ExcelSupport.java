@@ -1,23 +1,28 @@
 package com.charmyin.staffleave.util;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import com.charmyin.staffleave.po.LeavePiece;
 import com.charmyin.staffleave.po.LeaveRequest;
 
 public class ExcelSupport {
 	
 	/**
-	 * ∂¡≥ˆexcel÷–µƒ√ø“ªÃı«ÎºŸº«¬º£¨ÃÌº”÷¡list÷–
+	 * 
 	 * @param path
 	 * @return
 	 */
@@ -30,38 +35,112 @@ public class ExcelSupport {
 			Workbook wb = WorkbookFactory.create(inp);
 			Sheet sheet = wb.getSheetAt(0);
 			Iterator<Row> rows = sheet.iterator();
+			rows.next();
+			rows.next();
 			while(rows.hasNext()){
 				Row row = rows.next();
 				Cell cel = row.getCell(0);
-				if(cel==null){
-					System.out.println();
+				if(cel==null||cel.toString().trim().equals("")){
 					break;
 				}
 				Cell cel7 = row.getCell(7);
 				LeaveRequest lq = new LeaveRequest();
-				lq.setStaffName(cel.toString());
-				
-				lq.setLeavePiece(cel7.toString());
-				System.out.println(cel.toString());
+				lq.setStaffName(cel.toString().replaceAll("\\s",""));
+				lq.setLeavePiece(cel7.toString().replaceAll("\\s",""));
+				list.add(lq);
+				//System.out.println(cel.toString());
 			}
 			
-			
-			
-			
-//			Cell cell = row.getCell(3);
-//			if (cell == null)
-//				cell = row.createCell(3);
-//			cell.setCellType(Cell.CELL_TYPE_STRING);
-//			cell.setCellValue("a test");
-			// Write the output to a file
-//			FileOutputStream fileOut = new FileOutputStream("workbook.xls");
-//			wb.write(fileOut);
-//			fileOut.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e);
 			// TODO: handle exception
 		}
 		return list;
+	}
+	
+	
+	public static void writeToTempleExcel(String tempFilePathWithName, String destFilePathWithoutName, List<LeaveRequest> lq){
+		try {
+			InputStream inp = new FileInputStream(tempFilePathWithName);
+			//InputStream inp = new FileInputStream("workbook.xlsx");
+			Workbook wb = WorkbookFactory.create(inp);
+			Sheet sheet = wb.getSheetAt(0);
+			inp.close();
+			List<String> templeNameList = getTempleExcelNameList(tempFilePathWithName);
+			
+			for(LeaveRequest lqt : lq){
+				int lqIndex =  templeNameList.indexOf(lqt.getStaffName());
+				if(lqIndex==0 || lqIndex==-1){
+					System.out.println(lqt.getStaffName()+"‰∏çÂ≠òÂú®");
+					continue;
+				}
+				Row row = sheet.getRow(lqIndex+3);
+				List<LeavePiece> lpl = lqt.getLeavePiece();
+				for(LeavePiece lp : lpl){
+					writeLeavePieceToRow(row,lp);
+				}
+			}
+			
+//			Row row = sheet.getRow(2);
+//			Cell cell = row.getCell(3);
+//			if (cell == null)
+//				cell = row.createCell(3);
+//			cell.setCellType(Cell.CELL_TYPE_STRING);
+//			cell.setCellValue("a test");
+			// Write the output to a file
+			//Date date = new Date();
+			Calendar cd = Calendar.getInstance();
+			 
+			FileOutputStream fileOut = new FileOutputStream(destFilePathWithoutName+"\\"+(cd.get(Calendar.MONTH)-1)+"-Report.xlsx");
+			wb.write(fileOut);
+			fileOut.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void writeLeavePieceToRow(Row row, LeavePiece lp) {
+		Calendar cl = Calendar.getInstance();
+		cl.setTime(lp.getStartTime());
+		int startDay = cl.get(Calendar.DAY_OF_MONTH);
+		
+		for(int i=0; i<lp.getLeaveDayCount(); i++){
+			Cell cell = row.getCell(i+1+startDay);
+			cell.setCellType(Cell.CELL_TYPE_STRING);
+			String leaveType = lp.getLeaveType();
+			if(leaveType.endsWith("Âπ¥ÂÅá")){
+				cell.setCellValue(LeaveType.props.getProperty("Âπ¥ÂÅá"));
+			}else{
+				cell.setCellValue(LeaveType.props.getProperty(lp.getLeaveType()));
+			}
+			
+		}
+	}
+
+
+	private static List<String> getTempleExcelNameList(String tempFilePathWithName) {
+		List<String> staffNameList = new ArrayList<String>();
+		try {
+			InputStream inp = new FileInputStream(tempFilePathWithName);
+			Workbook wb = WorkbookFactory.create(inp);
+			inp.close();
+			Sheet sheet = wb.getSheetAt(0);
+			Iterator<Row> it = sheet.iterator();
+			it.next();
+			it.next();
+			it.next();
+			while(it.hasNext()){
+				Row tempRow = it.next();
+				tempRow.getCell(1);
+				staffNameList.add(tempRow.getCell(1).getStringCellValue().replaceAll("\\s",""));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		return staffNameList;
 	}
 }
