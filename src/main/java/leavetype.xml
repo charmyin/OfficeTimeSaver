@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="事假">○</entry>
+	<entry key="病假">▽</entry>
+	<entry key="丧假">◇</entry>
+	<entry key="产假">△</entry>
+	<entry key="年假">□</entry>
+	<entry key="旷工">╳</entry>
+	<entry key="倒休">★</entry>
+	<entry key="探亲假">☆</entry>
+	<entry key="婚假">◆</entry>
+	<entry key="产检">●</entry>
+	<entry key="陪产假">ῼ</entry>
+	<entry key="哺乳假">※</entry>
+
+	<entry key="事假位置">33</entry>
+	<entry key="病假位置">34</entry>
+	<entry key="丧假位置">35</entry>
+	<entry key="产假位置">36</entry>
+	<entry key="年假位置">37</entry>
+	<entry key="旷工位置">38</entry>
+	<entry key="倒休位置">39</entry>
+	<entry key="探亲假位置">40</entry>
+	<entry key="婚假位置">41</entry>
+	<entry key="产检位置">42</entry>
+	<entry key="陪产假位置">43</entry>
+	<entry key="哺乳假位置">44</entry>
+</properties>

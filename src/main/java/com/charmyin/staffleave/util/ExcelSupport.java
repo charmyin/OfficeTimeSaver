@@ -101,22 +101,42 @@ public class ExcelSupport {
 		}
 	}
 
-	private static void writeLeavePieceToRow(Row row, LeavePiece lp) {
+	private static void writeLeavePieceToRow(Row row, LeavePiece lp) throws Exception {
 		Calendar cl = Calendar.getInstance();
 		cl.setTime(lp.getStartTime());
 		int startDay = cl.get(Calendar.DAY_OF_MONTH);
-		
+		//请假类型
+		String leaveType = lp.getLeaveType();
+		//请假类型符号
+		String leaveTypeIcon = LeaveType.props.getProperty(lp.getLeaveType());
+		//请假类型在行中的位置
+		int cellIndex = 0;
+		if(leaveType.endsWith("年假")){
+			cellIndex = Integer.parseInt(LeaveType.props.getProperty("年假位置"));
+		}else if(LeaveType.props.containsKey(lp.getLeaveType())){
+			cellIndex = Integer.parseInt(LeaveType.props.getProperty(lp.getLeaveType()+"位置"));
+		}else{
+			throw(new Exception("输入的假期有误！请排查！"));
+		}
 		for(int i=0; i<lp.getLeaveDayCount(); i++){
 			Cell cell = row.getCell(i+1+startDay);
+			String tempCellStr = cell.getStringCellValue();
 			cell.setCellType(Cell.CELL_TYPE_STRING);
-			String leaveType = lp.getLeaveType();
 			if(leaveType.endsWith("年假")){
-				cell.setCellValue(LeaveType.props.getProperty("年假"));
+				cell.setCellValue(LeaveType.props.getProperty("年假")+tempCellStr);
 			}else{
-				cell.setCellValue(LeaveType.props.getProperty(lp.getLeaveType()));
+				cell.setCellValue(leaveTypeIcon+tempCellStr);
 			}
-			
 		}
+		Cell cellIndexCell = row.getCell(cellIndex);
+		float cellOldValue = 0f;
+		if(cellIndexCell.getCellType() == Cell.CELL_TYPE_NUMERIC){
+		 
+			cellOldValue = (float)cellIndexCell.getNumericCellValue();
+		}
+		 
+		cellIndexCell.setCellType(Cell.CELL_TYPE_NUMERIC);
+		cellIndexCell.setCellValue(lp.getLeaveDayCount()+cellOldValue);
 	}
 
 
