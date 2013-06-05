@@ -6,6 +6,14 @@ import java.util.List;
 public class LeaveRequest {
 	private String staffName;
 	
+	private String leavePieceString;
+	 
+	public String getLeavePieceString() {
+		return leavePieceString;
+	}
+	public void setLeavePieceString(String leavePieceString) {
+		this.leavePieceString = leavePieceString;
+	}
 	private List<LeavePiece> leavePiece;
 	
 	private float leaveDayCount = 0.0f;
@@ -37,7 +45,7 @@ public class LeaveRequest {
 		this.leavePiece = leavePiece;
 	}
 	public void setLeavePiece(String string) {
-		// TODO Auto-generated method stub
+		this.leavePieceString = string;
 		String[] leavePieces = string.split("\\+");
 		this.leavePiece = new ArrayList<LeavePiece>();
 		for(String str : leavePieces){

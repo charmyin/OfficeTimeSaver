@@ -78,8 +78,15 @@ public class ExcelSupport {
 				Row row = sheet.getRow(lqIndex+3);
 				List<LeavePiece> lpl = lqt.getLeavePiece();
 				for(LeavePiece lp : lpl){
-					writeLeavePieceToRow(row,lp);
+					try{
+						writeLeavePieceToRow(row,lp);
+					}catch(Exception e){
+						System.out.println(lqt.getStaffName()+"格式有错误");
+						e.printStackTrace();
+					}
+					
 				}
+				System.out.println(lqt.getStaffName()+" : "+lqt.getLeavePieceString()+"---(Writed)!");
 			}
 			
 //			Row row = sheet.getRow(2);
@@ -116,7 +123,7 @@ public class ExcelSupport {
 		}else if(LeaveType.props.containsKey(lp.getLeaveType())){
 			cellIndex = Integer.parseInt(LeaveType.props.getProperty(lp.getLeaveType()+"位置"));
 		}else{
-			throw(new Exception("输入的假期有误！请排查！"));
+			throw(new Exception("输入的假期有误！请排查！"+lp.getLeaveType()));
 		}
 		for(int i=0; i<lp.getLeaveDayCount(); i++){
 			Cell cell = row.getCell(i+1+startDay);
