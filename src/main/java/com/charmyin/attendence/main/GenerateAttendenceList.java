@@ -8,16 +8,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
 import com.charmyin.attendence.po.Attendence;
 import com.charmyin.attendence.po.Staff;
+import com.charmyin.attendence.po.StaffAttendencePiece;
 
 public class GenerateAttendenceList {
 	//离职人员打卡数据
 	public static List<Attendence> atNotfoundList;
 	private static String saturday = "29";
+	private static List<StaffAttendencePiece> sapList = new ArrayList<StaffAttendencePiece>();
 	/**
 	 * @param args
 	 */
@@ -35,10 +38,29 @@ public class GenerateAttendenceList {
 		int countAll = readAttendenceToStaffMap(staffMap);
 		
 		//获取最终形式
-		
-		
-		
-		System.out.println("共有"+countAll+"条数据，有"+atNotfoundList.size()+"条记录无对应人员");
+		Iterator<Entry<String,Staff>> it = staffMap.entrySet().iterator();
+		while(it.hasNext()){
+			Entry<String,Staff> tempEntry = it.next();
+			Staff sf = tempEntry.getValue();
+			Iterator<Entry<String,String>> it1 = sf.getIdTimes().entrySet().iterator();
+			while(it1.hasNext()){
+				Entry<String,String> tempEntry1 = it1.next();
+				StaffAttendencePiece sap = new StaffAttendencePiece();
+				sap.setId(sf.getId());
+				sap.setDate(tempEntry1.getKey());
+				sap.setDepartment(sf.getDepartment());
+				sap.setName(sf.getName());
+				sap.setRecord(tempEntry1.getValue());
+				sapList.add(sap);
+			}
+			//System.out.println(sf.getId()+"--"+sf.getDepartment());
+		}
+		System.out.println("<!DOCTYPE html><html><head></head><body><table>");
+		for(StaffAttendencePiece ss : sapList){
+			System.out.println("<tr><td>"+ss.getDepartment()+"</td><td>"+ss.getId()+"</td><td>"+ss.getName()+"</td><td>-"+ss.getDate().trim()+"</td><td>"+ss.getRecord()+"</td></tr>");
+		}
+		System.out.println("</table></body></html>");
+		//System.out.println("共有"+countAll+"条数据，有"+atNotfoundList.size()+"条记录无对应人员");
 	}
 	
 	//遍历所有的考勤数据，将每条数据录入员工map中对象的list
@@ -50,7 +72,7 @@ public class GenerateAttendenceList {
 			br = new BufferedReader(new FileReader("F:\\zebone\\staffattendence\\24-29.txt"));
 			while ((sCurrentLine = br.readLine()) != null) {
 				String[] str = sCurrentLine.split("\\s+");
-				System.out.println(str[1]+"~~"+str[2]+"~~"+str[3]);
+			//	System.out.println(str[1]+"~~"+str[2]+"~~"+str[3]);
 				String[] tempTime = str[3].split(":");
 				int hourOfDay = Integer.parseInt(tempTime[0]);
 				int minuteOfHour = Integer.parseInt(tempTime[1]);
@@ -60,7 +82,7 @@ public class GenerateAttendenceList {
 				
 				//在上班时间打卡的行为都不是好行为~
 				if(saturday.equals(str[2].split("-")[2])){
-					System.out.println("周六打卡情况："+str[1]+"~~"+str[2]+"~~"+str[3]);
+					//System.out.println("周六打卡情况："+str[1]+"~~"+str[2]+"~~"+str[3]);
 					if((hourOfDay>=8 && hourOfDay<11)){
 						if((hourOfDay==8&&minuteOfHour==0)){
 							atd.setWrong(false);
@@ -104,9 +126,9 @@ public class GenerateAttendenceList {
 				}
 				if(idtimesmap.containsKey(str[2])){
 					String tempStr = idtimesmap.get(str[2])+","+tempStrToAdd;			
-					idtimesmap.put(str[1], tempStr);
+					idtimesmap.put(str[2], tempStr);
 				}else{
-					idtimesmap.put(str[1], tempStrToAdd);
+					idtimesmap.put(str[2], tempStrToAdd);
 				}
 				//staffMap.get(str[1]).getIdTimes().put("", "");
 				staffMap.get(str[1]).getList().add(atd);
