@@ -12,7 +12,7 @@ import java.util.Set;
 import com.charmyin.attendence.po.Staff;
 
 public class FindSomeOne {
-	private static String id = "232";
+	private static String id = "337";
 	/**
 	 * @param args
 	 */
