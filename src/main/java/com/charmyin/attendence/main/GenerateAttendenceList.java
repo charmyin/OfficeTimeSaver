@@ -57,10 +57,13 @@ public class GenerateAttendenceList {
 		}
 		System.out.println("<!DOCTYPE html><html><head></head><body><table>");
 		for(StaffAttendencePiece ss : sapList){
-			System.out.println("<tr><td>"+ss.getDepartment()+"</td><td>"+ss.getId()+"</td><td>"+ss.getName()+"</td><td>-"+ss.getDate().trim()+"</td><td>"+ss.getRecord()+"</td></tr>");
+			System.out.println("<tr><td>"+ss.getDepartment()+"</td><td>"+ss.getId()+"</td><td>"+ss.getName()+"</td><td>"+ss.getDate().trim()+"</td><td>"+ss.getRecord()+"</td></tr>");
 		}
 		System.out.println("</table></body></html>");
-		//System.out.println("共有"+countAll+"条数据，有"+atNotfoundList.size()+"条记录无对应人员");
+		System.out.println("共有"+countAll+"条数据，有"+atNotfoundList.size()+"条记录无对应人员");
+		for(Attendence at : atNotfoundList){
+			System.out.println(at.getId());
+		}
 	}
 	
 	//遍历所有的考勤数据，将每条数据录入员工map中对象的list
@@ -69,7 +72,7 @@ public class GenerateAttendenceList {
 		int count = 0;
 		try {
 			String sCurrentLine;
-			br = new BufferedReader(new FileReader("F:\\zebone\\staffattendence\\24-29.txt"));
+			br = new BufferedReader(new FileReader("F:\\zebone\\staffattendence\\7.1-7.6.txt"));
 			while ((sCurrentLine = br.readLine()) != null) {
 				String[] str = sCurrentLine.split("\\s+");
 			//	System.out.println(str[1]+"~~"+str[2]+"~~"+str[3]);
@@ -77,6 +80,7 @@ public class GenerateAttendenceList {
 				int hourOfDay = Integer.parseInt(tempTime[0]);
 				int minuteOfHour = Integer.parseInt(tempTime[1]);
 				Attendence atd = new Attendence();
+				atd.setId(str[1]);
 				atd.setThatDay(str[2]);
 				atd.setComeLeaveTimeOfDay(str[3]);
 				
