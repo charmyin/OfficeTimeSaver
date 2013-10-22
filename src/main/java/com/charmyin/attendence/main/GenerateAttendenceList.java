@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -19,15 +20,21 @@ import com.charmyin.attendence.po.StaffAttendencePiece;
 public class GenerateAttendenceList {
 	//离职人员打卡数据
 	public static List<Attendence> atNotfoundList;
-	private static String saturday = "7";
+	//休息半天的日期SET集合
+	private static String[] saturday = {"12","19"};
 	private static List<StaffAttendencePiece> sapList = new ArrayList<StaffAttendencePiece>();
-	private static String  attendenceFilePath= "F:\\zebone\\staffattendence\\9.2-9.7.txt";
-	
+	private static String  attendenceFilePath= "F:\\zebone\\staffattendence\\10.8-10.19.txt";
+	private static Set<String> saturdaySet=null;
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+		 saturdaySet = new HashSet<String>();
+		 for (String o : saturday){
+			 saturdaySet.add(o); 
+		 }
+		//初始化休息半天的SET集合
+		 
 		//离职人员打卡数据
 		atNotfoundList = new ArrayList<Attendence>();
 		
@@ -87,7 +94,7 @@ public class GenerateAttendenceList {
 				atd.setComeLeaveTimeOfDay(str[3]);
 				
 				//在上班时间打卡的行为都不是好行为~
-				if(saturday.equals(str[2].split("-")[2])){
+				if(saturdaySet.contains(str[2].split("-")[2])){
 					//System.out.println("周六打卡情况："+str[1]+"~~"+str[2]+"~~"+str[3]);
 					if((hourOfDay>=8 && hourOfDay<11)){
 						if((hourOfDay==8&&minuteOfHour==0)){
